@@ -1,6 +1,6 @@
 {
   "name": "react-movie-select",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "description": "Carousel movie selector - using www.themoviedb.org API",
   "main": "lib/MovieSelect.js",
@@ -19,6 +19,7 @@
     "isomorphic-fetch": "^2.1.0",
     "react": "^0.13.3",
     "react-bootstrap": "^0.23.1",
+    "react-select": "^0.4.9",
     "react-transmit": "^2.6.3",
     "reactify": "^1.1.1",
     "underscore": "^1.8.3"
