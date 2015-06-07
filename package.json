@@ -1,6 +1,6 @@
 {
   "name": "react-movie-select",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "private": false,
   "description": "Carousel movie selector - using www.themoviedb.org API",
   "main": "lib/MovieSelect.js",

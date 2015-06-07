@@ -1,7 +1,7 @@
 {
   "name": "react-movie-select",
   "main": "dist/react-movie-select.min.js",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "homepage": "https://github.com/rsamec/instagram-carousel",
   "authors": [
     "Roman Samec"
