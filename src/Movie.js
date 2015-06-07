@@ -13,7 +13,7 @@ const Movie = React.createClass({
 		var poster_path = config.images.base_url + config.images.poster_sizes[4] + item.poster_path;
 		return (
 			<div>
-				<img alt={item.title} src={poster_path}/>
+				<img className="img-responsive" alt={item.title} src={poster_path}/>
 				<div className='carousel-caption'>
 					<h3>{item.title}</h3>
 					<p>{item.overview}</p>

@@ -36,7 +36,15 @@ const MovieSelect = React.createClass({
 		else{
 			keys.splice(index,1);
 		}
-		if (this.props.valueLink !== undefined) this.props.valueLink.requestChange(this.getSelectedItems(keys));
+		if (this.props.valueLink !== undefined) {
+			let config = this.props.queryParams.config;
+			var selectedMovies = _.map(this.getSelectedItems(keys),function(movie){
+				var clone = _.clone(movie)
+				clone.poster_path = config.images.base_url + config.images.poster_sizes[2] + clone.poster_path;
+			})
+			
+			this.props.valueLink.requestChange(selectedMovies);
+		}
 		this.setState({selectedKeys:keys});
 	},
 	getSelectedItems(selectedKeys){
