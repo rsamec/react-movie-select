@@ -41,6 +41,7 @@ const MovieSelect = React.createClass({
 			var selectedMovies = _.map(this.getSelectedItems(keys),function(movie){
 				var clone = _.clone(movie)
 				clone.poster_path = config.images.base_url + config.images.poster_sizes[2] + clone.poster_path;
+				return {movie:clone};
 			})
 			
 			this.props.valueLink.requestChange(selectedMovies);
