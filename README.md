@@ -49,5 +49,5 @@ __ADDITIONAL USAGE NOTES__
 
 ### License
 
-MIT. Copyright (c) 2014 Jed Watson.
+MIT. Copyright (c) 2015 Roman Samec
 

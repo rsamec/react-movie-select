@@ -4,6 +4,7 @@ import {Button} from 'react-bootstrap';
 
 const Movie = React.createClass({
 	handleClick(selectedItem) {
+		if (this.props.onSelect !== undefined) this.props.onSelect(selectedItem);
 	},
 	render() {
 		// Passed down props.
@@ -16,7 +17,7 @@ const Movie = React.createClass({
 				<div className='carousel-caption'>
 					<h3>{item.title}</h3>
 					<p>{item.overview}</p>
-					<Button bsStyle='primary' onClick={this.handleClick.bind(this, item)}>{item.selected ? 'Remove' : 'Add'}</Button>
+					<Button bsStyle='primary' onClick={this.handleClick.bind(this, item)}>{this.props.selected ? 'Remove' : 'Add'}</Button>
 				</div>
 			</div>);
 	}
