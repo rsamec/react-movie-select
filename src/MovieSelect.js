@@ -5,9 +5,9 @@ import _ from "underscore";
 import Config    from "./Config.js";
 import Movie    from "./Movie.js";
 
-import {Carousel,CarouselItem} from 'react-bootstrap';
+import {Carousel,CarouselItem,Button} from 'react-bootstrap';
 import LangSelector from './LangSelector.js';
-import ApiKeyInput from './ApiKeyInput.js';
+import SearchInput from './SearchInput.js';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
@@ -15,7 +15,13 @@ require('isomorphic-fetch');
 
 const MovieSelect = React.createClass({
 	getInitialState(){
-		return {selectedKeys:[]}
+		return {
+			selectedItems:this.props.selectedItems || []
+		}
+	},
+	clearSelected(){
+		this.setState({selectedItems:[]});
+		if (this.props.valueLink !== undefined) this.props.valueLink.requestChange([]);
 	},
 	langChange(newValue){
 		this.props.setQueryParams({
@@ -27,39 +33,48 @@ const MovieSelect = React.createClass({
 			apiKey: newValue
 		});
 	},
+	searchChange(newValue){
+		this.props.setQueryParams({
+			searchText: newValue
+		});
+	},
+	componentDidMount(){
+		this.props.setQueryParams({
+			searchText:this.props.searchText,
+			apiKey: this.props.apiKey,
+			count:this.props.maxCount || 5
+		});
+	},
 	selectItem(item){
-		var keys = this.state.selectedKeys;
-		var index = keys.indexOf(item.id);
+		var items = this.state.selectedItems;
+		var index = items.indexOf(item);
 		if (index === -1) {
-			keys.push(item.id);
+			items.push(item);
 		}
 		else{
-			keys.splice(index,1);
+			items.splice(index,1);
 		}
+		
 		if (this.props.valueLink !== undefined) {
 			let config = this.props.queryParams.config;
-			var selectedMovies = _.map(this.getSelectedItems(keys),function(movie){
+			var selectedMovies = _.map(this.state.selectedItems,function(movie){
 				var clone = _.clone(movie)
 				clone.poster_path = config.images.base_url + config.images.poster_sizes[2] + clone.poster_path;
+				//if (clone.media_type==="tv") clone.title = clone.name; 
 				return {movie:clone};
 			})
 			
 			this.props.valueLink.requestChange(selectedMovies);
 		}
-		this.setState({selectedKeys:keys});
-	},
-	getSelectedItems(selectedKeys){
-		if (selectedKeys === undefined) selectedKeys = this.state.selectedKeys;
-		var items = _.filter(this.props.movies,function(item){return _.some(selectedKeys,function(key){return item.id === key})});
-		return items || [];
+		this.setState({selectedItems:items});
 	},
 	render() {
 		// Transmit props are guaranteed.
 		let movies = this.props.movies;
 		let config = this.props.queryParams.config;
 
-		let movieCarousel = <span>{this.props.queryParams.status_message}</span>;
-		var selectedItems = this.getSelectedItems();
+		let movieCarousel = config!==undefined?<span>There are no movies, tvs.</span>:<span>{this.props.queryParams.status_message}</span>;
+		var selectedItems = this.state.selectedItems;
 		if (movies !== undefined && movies.length !== 0) {
 			movieCarousel =
 				<Carousel>
@@ -71,12 +86,16 @@ const MovieSelect = React.createClass({
 					}, this)}
 				</Carousel>
 		}
-
+		var clearButtonStyle ={}
+		if (this.state.selectedItems.length === 0) clearButtonStyle = {display:'none'};
 		return (
 			<div>
 				<div className="row">
-					<div className="col-md-8">
-						<ApiKeyInput onChange={this.apiKeyChange} />
+					<div className="col-md-6">
+						<SearchInput onChange={this.searchChange} />
+					</div>
+					<div className="col-md-2">
+						<Button bsStyle='primary' style={clearButtonStyle} onClick={this.clearSelected}>Clear <span className="badge">{this.state.selectedItems.length}</span></Button>
 					</div>
 					<div className="col-md-4">
 						<LangSelector onChange={this.langChange} />
@@ -90,7 +109,8 @@ const MovieSelect = React.createClass({
 // Higher-order component that will do queries for the above React component.
 export default Transmit.createContainer(MovieSelect, {
 	queryParams: {
-		apiKey: '',
+		apiKey:'',
+		searchText:'',
 		count: 5,  // Default query params.
 		lang:'en'
 	},
@@ -106,14 +126,17 @@ export default Transmit.createContainer(MovieSelect, {
 				}
 				queryParams.status_message = undefined;
 				queryParams.config = resp;
-				return fetch('https://api.themoviedb.org/3/movie/top_rated?api_key=' + queryParams.apiKey + '&language=' + 	queryParams.lang).then(function(resp) {
+				var url = "https://api.themoviedb.org/3/search/multi";
+				return fetch(url + '?api_key=' + queryParams.apiKey + '&language=' + 	queryParams.lang + '&query='+ queryParams.searchText + '&page=1').then(function(resp) {
 					return resp.json().then(function(movies) {
-						return Promise.all(_.map(movies.results.slice(0,queryParams.count), function (movie) {
+						return Promise.all(
+							_.map(_.filter(movies.results,function(item){return item.media_type === "movie" || item.media_type === "tv"}).slice(0,queryParams.count), function (movie) {
 								return Movie.getQuery("movie", {
 									apiKey: queryParams.apiKey,
 									lang:queryParams.lang,
-									movieId: movie.id
-								});
+									movieId: movie.id,
+									mediaType:movie.media_type
+								})
 							})
 						)
 					})
