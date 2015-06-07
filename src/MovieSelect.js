@@ -16,11 +16,11 @@ require('isomorphic-fetch');
 const MovieSelect = React.createClass({
 	getInitialState(){
 		return {
-			selectedItems:this.props.selectedItems || []
+			selItems:this.props.selectedItems || []
 		}
 	},
 	clearSelected(){
-		this.setState({selectedItems:[]});
+		this.setState({selItems:[]});
 		if (this.props.valueLink !== undefined) this.props.valueLink.requestChange([]);
 	},
 	langChange(newValue){
@@ -46,7 +46,7 @@ const MovieSelect = React.createClass({
 		});
 	},
 	selectItem(item){
-		var items = this.state.selectedItems;
+		var items = this.state.selItems;
 		var index = items.indexOf(item);
 		if (index === -1) {
 			items.push(item);
@@ -57,7 +57,7 @@ const MovieSelect = React.createClass({
 		
 		if (this.props.valueLink !== undefined) {
 			let config = this.props.queryParams.config;
-			var selectedMovies = _.map(this.state.selectedItems,function(movie){
+			var selectedMovies = _.map(this.state.selItems,function(movie){
 				var clone = _.clone(movie)
 				clone.poster_path = config.images.base_url + config.images.poster_sizes[2] + clone.poster_path;
 				//if (clone.media_type==="tv") clone.title = clone.name; 
@@ -66,7 +66,7 @@ const MovieSelect = React.createClass({
 			
 			this.props.valueLink.requestChange(selectedMovies);
 		}
-		this.setState({selectedItems:items});
+		this.setState({selItems:items});
 	},
 	render() {
 		// Transmit props are guaranteed.
@@ -74,12 +74,12 @@ const MovieSelect = React.createClass({
 		let config = this.props.queryParams.config;
 
 		let movieCarousel = config!==undefined?<span>There are no movies, tvs.</span>:<span>{this.props.queryParams.status_message}</span>;
-		var selectedItems = this.state.selectedItems;
+		var selItems = this.state.selItems;
 		if (movies !== undefined && movies.length !== 0) {
 			movieCarousel =
 				<Carousel>
 					{movies.map(function (movie, index) {
-						var selected = selectedItems.indexOf(movie) !== -1
+						var selected = selItems.indexOf(movie) !== -1
 						return (<CarouselItem>
 							<Movie movie={movie} selected={selected} onSelect={this.selectItem} config={config} />
 						</CarouselItem>);
@@ -87,7 +87,7 @@ const MovieSelect = React.createClass({
 				</Carousel>
 		}
 		var clearButtonStyle ={}
-		if (this.state.selectedItems.length === 0) clearButtonStyle = {display:'none'};
+		if (this.state.selItems.length === 0) clearButtonStyle = {display:'none'};
 		return (
 			<div>
 				<div className="row">
@@ -95,7 +95,7 @@ const MovieSelect = React.createClass({
 						<SearchInput onChange={this.searchChange} />
 					</div>
 					<div className="col-md-2">
-						<Button bsStyle='primary' style={clearButtonStyle} onClick={this.clearSelected}>Clear <span className="badge">{this.state.selectedItems.length}</span></Button>
+						<Button bsStyle='primary' style={clearButtonStyle} onClick={this.clearSelected}>Clear <span className="badge">{this.state.selItems.length}</span></Button>
 					</div>
 					<div className="col-md-4">
 						<LangSelector onChange={this.langChange} />
