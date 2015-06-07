@@ -15,8 +15,9 @@ require('isomorphic-fetch');
 
 const MovieSelect = React.createClass({
 	getInitialState(){
+		var value = this.props.selectedItems!== undefined?this.props.selectedItems.value:[];
 		return {
-			selItems:this.props.selectedItems || []
+			selItems:value || []
 		}
 	},
 	clearSelected(){
