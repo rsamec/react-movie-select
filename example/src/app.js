@@ -12,7 +12,7 @@ var App = React.createClass({
 		var selectedItems = this.state.data.selectedItems || [];
 		return (
 			<div>
-				<MovieSelect apiKey="aa3f9011bd8f4021846099cb988f034a" valueLink={this.bindToState('data','selectedItems')} />
+				<MovieSelect valueLink={this.bindToState('data','selectedItems')} />
 				<ul>
 				{selectedItems.map(function(item,index){
 					return (<li>{item.title}</li>)
