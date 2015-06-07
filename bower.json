@@ -1,0 +1,29 @@
+{
+  "name": "react-movie-select",
+  "main": "dist/react-movie-select.min.js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/rsamec/instagram-carousel",
+  "authors": [
+    "Roman Samec"
+  ],
+  "description": "Carousel movie selector - using www.themoviedb.org API",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "react",
+    "react-component"
+  ],
+  "license": "MIT",
+  "ignore": [
+    ".editorconfig",
+    ".gitignore",
+    "package.json",
+    "src",
+    "node_modules",
+    "example",
+    "test"
+  ]
+}

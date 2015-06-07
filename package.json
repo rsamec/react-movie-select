@@ -1,0 +1,47 @@
+{
+  "name": "react-movie-select",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Carousel movie selector - using www.themoviedb.org API",
+  "main": "lib/MovieSelect.js",
+  "author": "Roman Samec (roman.samec2@gmail.com)",
+  "license": "MIT",
+  "homepage": "https://github.com/rsamec/react-movie-select",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rsamec/react-movie-select.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rsamec/react-movie-select/issues"
+  },
+  "dependencies": {
+    "es6-promise": "^2.1.1",
+    "isomorphic-fetch": "^2.1.0",
+    "react": "^0.13.3",
+    "react-bootstrap": "^0.23.1",
+    "react-transmit": "^2.6.3",
+    "reactify": "^1.1.1",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "react-binding": "^0.6.3",
+    "react-component-gulp-tasks": "^0.7.0"
+  },
+  "browserify": {
+    "transform": [
+      "reactify"
+    ]
+  },
+  "browser": "lib/MovieSelect.js",
+  "browserify-shim": {
+    "react": "global:React"
+  },
+  "scripts": {
+    "test": "echo \"no tests yet\" && exit 0"
+  },
+  "keywords": [
+    "react",
+    "react-component"
+  ]
+}
